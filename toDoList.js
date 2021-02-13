@@ -161,13 +161,29 @@ ctx.font = '50px 궁서';
 
 const drawTodo = [];
 let drawId = 0;
+let hold = false
 
 let downRead = false;
+let draw = false;
 
 let selectId;
 
+let boxColor = "#F0CD5F";
+let textColor = "black";
+
+const drawing = [];
+let drawingId = 0;
+
+let startX;
+let startY;
+
+let curX;
+let curY;
+
 function loadDraw(text){
-    ctx.strokeRect(x,y,1000,1000);
+    ctx.fillStyle = boxColor
+    ctx.fillRect(x,y,500,75);
+    ctx.fillStyle = textColor
     ctx.fillText(text,x,y+50)
     const drawToDoData = {
         x,
@@ -175,10 +191,10 @@ function loadDraw(text){
         text
     }
     if(x+1000<maxX){
-        x=x+1100;
+        x=x+600;
     } else{
         x=10;
-        y=y+1100;
+        y=y+100;
     }
     drawTodo.push(drawToDoData);
     drawId++;
@@ -188,10 +204,42 @@ function loadDraw(text){
 function toDoDraw(){
     for(let i=0;i<=drawId-1;i++){
         if(i!=selectId){
-            ctx.strokeRect(drawTodo[i].x,drawTodo[i].y,1000,1000);
+            ctx.fillStyle = boxColor
+            ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
+            ctx.fillStyle = textColor
             ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
+            drawingDraw()
         }
     }
+}
+
+function toDoAllDraw(){
+    for(let i=0;i<=drawId-1;i++){
+            ctx.fillStyle = boxColor
+            ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
+            ctx.fillStyle = textColor
+            ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
+    }
+}
+
+
+function pDraw(){
+    ctx.clearRect(0, 0, maxX, maxY);
+    toDoAllDraw();
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(curX, curY);
+    ctx.stroke();
+    drawingDraw();
+}
+
+function drawingDraw(){
+    for(let i=0;i<=drawingId-1;i++){
+        ctx.beginPath();
+        ctx.moveTo(drawing[i].startX,drawing[i].startY);
+        ctx.lineTo(drawing[i].curX,drawing[i].curY);
+        ctx.stroke();
+}
 }
 
 
@@ -200,14 +248,20 @@ function down(e){
     const mouseY = e.offsetY
     for(let i=0;i<=drawId-1;i++){
         console.log(mouseX,mouseY,drawTodo[i].x,drawTodo[i].y);
-        if(mouseX<drawTodo[i].x+1000&&mouseX>drawTodo[i].x){
-            if(mouseY<drawTodo[i].y+1000&&mouseY>drawTodo[i].y){
+        if(mouseX<drawTodo[i].x+500&&mouseX>drawTodo[i].x){
+            if(mouseY<drawTodo[i].y+75&&mouseY>drawTodo[i].y){
                 console.log("hi");
                 downRead = true;
                 selectId = i;
+                canvas.style.cursor = "pointer"
             }
         }
     }
+    if(!downRead)
+    draw = true;
+    startX = mouseX;
+    startY = mouseY;
+    
 }
 
 function move(e){
@@ -218,14 +272,33 @@ function move(e){
         drawTodo[selectId].x = mouseX
         drawTodo[selectId].y = mouseY
         const selectText = drawTodo[selectId].text
-        ctx.strokeRect(mouseX,mouseY,1000,1000);
+        ctx.fillStyle = boxColor
+        ctx.fillRect(mouseX,mouseY,500,75);
+        ctx.fillStyle = textColor
         ctx.fillText(selectText,mouseX,mouseY+50)
         toDoDraw()
+    }
+    if(draw&&!downRead){
+        curX = e.offsetX; 
+        curY = e.offsetY;
+        pDraw();
     }
 }
 
 function up(){
     downRead = false;
+    canvas.style.cursor = "default"
+    if(draw){
+        const drawingData = {
+            startX,
+            startY,
+            curX,
+            curY
+        }
+        drawing.push(drawingData);
+        drawingId++;
+    }
+    draw = false;
 }
 
 function init(){
