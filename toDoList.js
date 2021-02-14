@@ -210,11 +210,16 @@ function paintToDo(text,check,timeLine){
 function submit(event){
     event.preventDefault()
     const text = input.value;
-    const time = clock();
-    paintToDo(text,false,time);
-    loadDraw(text)
+    const legend = text.length
+    if(legend<=10&&legend!==0){
+        const time = clock();
+        paintToDo(text,false,time);
+        loadDraw(text)
 
-    input.value = "";
+        input.value = "";
+    }else{
+        input.value = "";
+    }
 }
 
 const canvas = document.querySelector("canvas");
