@@ -5,7 +5,7 @@ const form = document.querySelector(".js-form"),
     Do = document.querySelector(".do"),
     perc = document.querySelector(".perc");
 
-const drawTodo = [];
+let drawTodo = [];
 let toDos = [];
 const TODO_LS = "toDos";
 const DRAW_LS = "draws"
@@ -64,11 +64,34 @@ function del(event){
     const li = btn.parentNode;
     list.removeChild(li);
     const removeText = toDos.filter(function(delToDo){
-        console.log(parseInt(li.id));
         return delToDo.id !== parseInt(li.id);
     })
+    console.log(removeText,"text",toDos)
     toDos = removeText;
     saveTodo();
+    delDrawToDo(parseInt(li.id))
+}
+
+function clearDrawToDo(){
+    ctx.clearRect(0, 0, maxX, maxY);
+    drawingDraw()
+    for(let i=0;i<=drawId-1;i++){
+        ctx.fillStyle = boxColor
+        ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
+        ctx.fillStyle = textColor
+        ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
+    }
+}
+
+function delDrawToDo(id){
+    const removeDrawToDo = drawTodo.filter(function(delToDo){
+        return delToDo.drawId !== id;
+    })
+    console.log(removeDrawToDo,"draw",drawTodo)
+    drawTodo = removeDrawToDo;
+    drawId = drawTodo.length
+    clearDrawToDo()
+    saveDrawToDo();
 }
 
 function success(event){
@@ -220,8 +243,10 @@ function loadDraw(text){
     const drawToDoData = {
         x,
         y,
-        text
+        text,
+        drawId
     }
+    drawId++;
     if(x+1000<maxX){
         x=x+600;
     } else{
@@ -229,8 +254,7 @@ function loadDraw(text){
         y=y+100;
     }
     drawTodo.push(drawToDoData);
-    drawId++;
-    i++
+    saveDrawToDo();
 }
 
 function toDoDraw(){
@@ -240,6 +264,8 @@ function toDoDraw(){
             ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
             ctx.fillStyle = textColor
             ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
+            drawingDraw()
+        }else{
             drawingDraw()
         }
     }
