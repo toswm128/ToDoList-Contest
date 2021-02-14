@@ -156,7 +156,6 @@ function paintToDo(text,check,timeLine){
     delButton.innerText="✖";
     successBox.innerText="⚪";
     spanTime.innerText = timeLine;
-    loadDraw(text)
     li.appendChild(spanTime);
     li.appendChild(span);
     li.appendChild(successBox);
@@ -178,6 +177,7 @@ function submit(event){
     const text = input.value;
     const time = clock();
     paintToDo(text,false,time);
+    loadDraw(text)
 
     input.value = "";
 }
