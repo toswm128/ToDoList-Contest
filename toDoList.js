@@ -36,7 +36,6 @@ function eachDrawToDo(DrawToDos){
 function eachDraws(drawings){
     drawing.push(drawings)
     drawingId++;
-    drawingDraw();
 }
 
 function loadToDo(){
@@ -55,6 +54,7 @@ function loadToDo(){
     if(loadDraws !== null){
         const paintDraws = JSON.parse(loadDraws);
         paintDraws.forEach(eachDraws);
+        drawingDraw();
     }
     percent();
 }
