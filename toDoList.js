@@ -331,6 +331,7 @@ function down(e){
                 console.log("hi");
                 downRead = true;
                 selectId = i;
+                delId = drawTodo[i].drawId;
                 canvas.style.cursor = "pointer"
             }
         }
@@ -379,14 +380,14 @@ function up(){
         saveDrawing();
     }
     if(outDelRead){
-        delDrawToDo(selectId)
-        delToDo(selectId)
+        delDrawToDo(delId)
+        delToDo(delId)
     }
     draw = false;
 }
 
 function outDel(){
-    console.log(selectId);
+    console.log(delId);
     outDelRead = true;
 }
 
