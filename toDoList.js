@@ -277,11 +277,17 @@ function toDoDraw(){
             ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
             ctx.fillStyle = textColor
             ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
-            drawingDraw()
         }else{
-            drawingDraw()
         }
     }
+    drawingDraw()
+}
+
+function drawingSave(i){
+    ctx.beginPath();
+        ctx.moveTo(drawing[i].startX,drawing[i].startY);
+        ctx.lineTo(drawing[i].curX,drawing[i].curY);
+        ctx.stroke();
 }
 
 function toDoAllDraw(){
@@ -363,6 +369,7 @@ function move(e){
         curY = e.offsetY;
         pDraw();
     }
+    outDelRead = false;
 }
 
 function up(){
