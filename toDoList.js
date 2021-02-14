@@ -5,24 +5,56 @@ const form = document.querySelector(".js-form"),
     Do = document.querySelector(".do"),
     perc = document.querySelector(".perc");
 
-
+const drawTodo = [];
 let toDos = [];
 const TODO_LS = "toDos";
+const DRAW_LS = "draws"
+const DRAWTODO_LS = "drawToDos"
 
 function saveTodo(){
     localStorage.setItem(TODO_LS,JSON.stringify(toDos));
 }
 
+function saveDrawToDo(){
+    localStorage.setItem(DRAWTODO_LS,JSON.stringify(drawTodo));
+}
+
+function saveDrawing(){
+    localStorage.setItem(DRAW_LS,JSON.stringify(drawing));
+}
 
 function eachPaint(toDo){
     paintToDo(toDo.text,toDo.check,toDo.timeLine);
 }
 
+function eachDrawToDo(DrawToDos){
+    drawTodo.push(DrawToDos)
+    drawId++;
+    toDoAllDraw();
+}
+
+function eachDraws(drawings){
+    drawing.push(drawings)
+    drawingId++;
+    drawingDraw();
+}
+
 function loadToDo(){
     const loadToDos = localStorage.getItem(TODO_LS);
+    const loadDrawToDos = localStorage.getItem(DRAWTODO_LS);
+    const loadDraws = localStorage.getItem(DRAW_LS);
+    console.log(loadDraws);
     if(loadToDos !== null){
         const paintToDos = JSON.parse(loadToDos);
         paintToDos.forEach(eachPaint);
+    }
+    if(loadDrawToDos !== null){
+        const paintDrawToDos = JSON.parse(loadDrawToDos);
+        paintDrawToDos.forEach(eachDrawToDo);
+    }
+    if(loadDraws !== null){
+        const paintDraws = JSON.parse(loadDraws);
+        paintDraws.forEach(eachDraws);
     }
     percent();
 }
@@ -124,13 +156,12 @@ function paintToDo(text,check,timeLine){
     delButton.innerText="✖";
     successBox.innerText="⚪";
     spanTime.innerText = timeLine;
-
+    loadDraw(text)
     li.appendChild(spanTime);
     li.appendChild(span);
     li.appendChild(successBox);
     li.appendChild(delButton);
     list.appendChild(li);
-    loadDraw(text)
     const toDoData = {
         text,
         id,
@@ -147,6 +178,7 @@ function submit(event){
     const text = input.value;
     const time = clock();
     paintToDo(text,false,time);
+
     input.value = "";
 }
 
@@ -159,7 +191,6 @@ const maxY = canvas.height;
 let x=10,y=10;
 ctx.font = '50px 궁서';
 
-const drawTodo = [];
 let drawId = 0;
 let hold = false
 
@@ -180,6 +211,7 @@ let startY;
 let curX;
 let curY;
 
+let i = 0;
 function loadDraw(text){
     ctx.fillStyle = boxColor
     ctx.fillRect(x,y,500,75);
@@ -198,7 +230,7 @@ function loadDraw(text){
     }
     drawTodo.push(drawToDoData);
     drawId++;
-
+    i++
 }
 
 function toDoDraw(){
@@ -231,6 +263,13 @@ function pDraw(){
     ctx.lineTo(curX, curY);
     ctx.stroke();
     drawingDraw();
+}
+
+function loadDrawing(){
+    ctx.beginPath();
+    ctx.moveTo(drawing[i].startX,drawing[i].startY);
+    ctx.lineTo(drawing[i].curX,drawing[i].curY);
+    ctx.stroke();
 }
 
 function drawingDraw(){
@@ -277,6 +316,7 @@ function move(e){
         ctx.fillStyle = textColor
         ctx.fillText(selectText,mouseX,mouseY+50)
         toDoDraw()
+        saveDrawToDo();
     }
     if(draw&&!downRead){
         curX = e.offsetX; 
@@ -297,6 +337,7 @@ function up(){
         }
         drawing.push(drawingData);
         drawingId++;
+        saveDrawing();
     }
     draw = false;
 }
