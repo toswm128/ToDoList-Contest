@@ -382,6 +382,7 @@ function up(){
     if(outDelRead){
         delDrawToDo(delId)
         delToDo(delId)
+        outDelRead = false;
     }
     draw = false;
 }
@@ -391,7 +392,7 @@ function outDel(){
     outDelRead = true;
 }
 
-function out(){
+function out(e){
     if(downRead){
         outDel();
     }
