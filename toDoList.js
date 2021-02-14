@@ -72,6 +72,18 @@ function del(event){
     delDrawToDo(parseInt(li.id))
 }
 
+function delToDo(id){
+    const li = document.getElementById(id)
+    console.log(li);
+    list.removeChild(li);
+    const removeText = toDos.filter(function(delToDo){
+        return delToDo.id !== id;
+    })
+    console.log(removeText,"text",toDos)
+    toDos = removeText;
+    saveTodo();
+}
+
 function clearDrawToDo(){
     ctx.clearRect(0, 0, maxX, maxY);
     drawingDraw()
@@ -219,6 +231,7 @@ let hold = false
 
 let downRead = false;
 let draw = false;
+let outDelRead = false;
 
 let selectId;
 
@@ -365,7 +378,22 @@ function up(){
         drawingId++;
         saveDrawing();
     }
+    if(outDelRead){
+        delDrawToDo(selectId)
+        delToDo(selectId)
+    }
     draw = false;
+}
+
+function outDel(){
+    console.log(selectId);
+    outDelRead = true;
+}
+
+function out(){
+    if(downRead){
+        outDel();
+    }
 }
 
 function init(){
@@ -373,7 +401,8 @@ function init(){
     form.addEventListener("submit",submit);
     canvas.addEventListener("mousedown",down);
     canvas.addEventListener("mousemove",move);
-    canvas.addEventListener("mouseup",up);
+    window.addEventListener("mouseup",up);
+    canvas.addEventListener("mouseout",out)
 }
 
 init();
