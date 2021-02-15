@@ -3,8 +3,8 @@ const form = document.querySelector(".js-form"),
     list = document.querySelector("ul"),
     To = document.querySelector(".to"),
     Do = document.querySelector(".do"),
-    perc = document.querySelector(".perc"),
-    back = document.querySelector(".back");
+    perc = document.querySelector(".perc");
+
 
 let drawTodo = [];
 let toDos = [];
@@ -212,7 +212,7 @@ function submit(event){
     event.preventDefault()
     const text = input.value;
     const legend = text.length
-    if(legend<=10&&legend!==0){
+    if(legend<=11&&legend!==0){
         const time = clock();
         paintToDo(text,false,time);
         loadDraw(text)
@@ -220,7 +220,6 @@ function submit(event){
         formHidden = true
         input.value = "";
     }else{
-        console.alert("글자 수 제한(1~10)")
         input.value = "";
     }
 }
@@ -232,7 +231,8 @@ const maxX = canvas.width;
 const maxY = canvas.height;
 
 let x=10,y=10;
-ctx.font = '50px 궁서';
+ctx.font = '50px Black Han Sans';
+ctx.font
 
 let drawId = 0;
 let hold = false
@@ -412,7 +412,6 @@ function out(e){
     if(downRead){
         outDel();
     }
-    draw = false;
 }
 
 function drawingCheck(e){
@@ -449,14 +448,18 @@ function CZDrawingDraw(){
 }
 }
 
-function drawingBack(){
-    if(drawingId>0){
-        console.log("hey")
-        drawing.pop();
-        drawingId--;
-        CZDrawingDraw();
-        toDoAllDraw()
-        saveDrawing();
+function drawingBack(e){
+    const key = e.key;
+    console.log(key);
+    if(key === "z"){
+        if(drawingId>0){
+            console.log("hey")
+            drawing.pop();
+            drawingId--;
+            CZDrawingDraw();
+            toDoAllDraw()
+            saveDrawing();
+        }
     }
 }
 
@@ -476,6 +479,8 @@ function keyDown(e){
 }
 
 
+
+
 function init(){
     loadToDo();
     form.addEventListener("submit",submit);
@@ -484,8 +489,8 @@ function init(){
     window.addEventListener("mouseup",up);
     canvas.addEventListener("mouseout",out)
     canvas.addEventListener("dblclick",drawingCheck);
-    back.addEventListener("click",drawingBack);
     window.addEventListener("keydown",keyDown)
+    window.addEventListener("keydown",drawingBack)
 }
 
 init();
