@@ -3,7 +3,8 @@ const form = document.querySelector(".js-form"),
     list = document.querySelector("ul"),
     To = document.querySelector(".to"),
     Do = document.querySelector(".do"),
-    perc = document.querySelector(".perc");
+    perc = document.querySelector(".perc"),
+    back = document.querySelector(".back");
 
 let drawTodo = [];
 let toDos = [];
@@ -435,15 +436,30 @@ function drawingCheck(e){
     }
 }
 
+function CZDrawingDraw(){
+    ctx.clearRect(0,0,maxX,maxY);
+    for(let i=0;i<=drawingId-1;i++){
+        ctx.beginPath();
+        ctx.moveTo(drawing[i].startX,drawing[i].startY);
+        ctx.lineTo(drawing[i].curX,drawing[i].curY);
+        ctx.stroke();
+}
+}
+
 function drawingBack(){
-    drawingId--;
-    drawingDraw();
-    toDoAllDraw()
+    if(drawingId>0){
+        console.log("hey")
+        drawing.pop();
+        drawingId--;
+        CZDrawingDraw();
+        toDoAllDraw()
+        saveDrawing();
+    }
 }
 
 function drawingFront(){
     drawingId++;
-    drawingDraw();
+    CZDrawingDraw();
     toDoAllDraw()
 }
 
@@ -455,6 +471,7 @@ function init(){
     window.addEventListener("mouseup",up);
     canvas.addEventListener("mouseout",out)
     canvas.addEventListener("dblclick",drawingCheck);
+    back.addEventListener("click",drawingBack);
 }
 
 init();
