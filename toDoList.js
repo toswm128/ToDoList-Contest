@@ -220,6 +220,7 @@ function submit(event){
         formHidden = true
         input.value = "";
     }else{
+        console.alert("글자 수 제한(1~10)")
         input.value = "";
     }
 }
@@ -411,6 +412,7 @@ function out(e){
     if(downRead){
         outDel();
     }
+    draw = false;
 }
 
 function drawingCheck(e){
