@@ -47,14 +47,14 @@ function loadToDo(){
         const paintToDos = JSON.parse(loadToDos);
         paintToDos.forEach(eachPaint);
     }
-    if(loadDrawToDos !== null){
-        const paintDrawToDos = JSON.parse(loadDrawToDos);
-        paintDrawToDos.forEach(eachDrawToDo);
-    }
     if(loadDraws !== null){
         const paintDraws = JSON.parse(loadDraws);
         paintDraws.forEach(eachDraws);
         drawingDraw();
+    }
+    if(loadDrawToDos !== null){
+        const paintDrawToDos = JSON.parse(loadDrawToDos);
+        paintDrawToDos.forEach(eachDrawToDo);
     }
     percent();
 }
@@ -88,7 +88,7 @@ function clearDrawToDo(){
     ctx.clearRect(0, 0, maxX, maxY);
     drawingDraw()
     for(let i=0;i<=drawId-1;i++){
-        ctx.fillStyle = boxColor
+        ctx.fillStyle = drawTodo[i].boxColor
         ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
         ctx.fillStyle = textColor
         ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
@@ -242,6 +242,7 @@ let selectId;
 
 let boxColor = "#F0CD5F";
 let textColor = "black";
+let checkColor = "#ffc3df";
 
 const drawing = [];
 let drawingId = 0;
@@ -262,7 +263,9 @@ function loadDraw(text){
         x,
         y,
         text,
-        drawId
+        drawId,
+        boxColor,
+        check: false
     }
     drawId++;
     if(x+1000<maxX){
@@ -276,16 +279,16 @@ function loadDraw(text){
 }
 
 function toDoDraw(){
+    drawingDraw()
     for(let i=0;i<=drawId-1;i++){
         if(i!=selectId){
-            ctx.fillStyle = boxColor
+            ctx.fillStyle = drawTodo[i].boxColor
             ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
             ctx.fillStyle = textColor
             ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
         }else{
         }
     }
-    drawingDraw()
 }
 
 function drawingSave(i){
@@ -297,7 +300,7 @@ function drawingSave(i){
 
 function toDoAllDraw(){
     for(let i=0;i<=drawId-1;i++){
-            ctx.fillStyle = boxColor
+            ctx.fillStyle = drawTodo[i].boxColor
             ctx.fillRect(drawTodo[i].x,drawTodo[i].y,500,75);
             ctx.fillStyle = textColor
             ctx.fillText(drawTodo[i].text,drawTodo[i].x,drawTodo[i].y+50)
@@ -307,12 +310,12 @@ function toDoAllDraw(){
 
 function pDraw(){
     ctx.clearRect(0, 0, maxX, maxY);
-    toDoAllDraw();
+    drawingDraw();
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(curX, curY);
     ctx.stroke();
-    drawingDraw();
+    toDoAllDraw();
 }
 
 function loadDrawing(){
@@ -336,10 +339,8 @@ function down(e){
     const mouseX = e.offsetX
     const mouseY = e.offsetY
     for(let i=0;i<=drawId-1;i++){
-        console.log(mouseX,mouseY,drawTodo[i].x,drawTodo[i].y);
         if(mouseX<drawTodo[i].x+500&&mouseX>drawTodo[i].x){
             if(mouseY<drawTodo[i].y+75&&mouseY>drawTodo[i].y){
-                console.log("hi");
                 downRead = true;
                 selectId = i;
                 delId = drawTodo[i].drawId;
@@ -362,11 +363,11 @@ function move(e){
         drawTodo[selectId].x = mouseX
         drawTodo[selectId].y = mouseY
         const selectText = drawTodo[selectId].text
-        ctx.fillStyle = boxColor
+        toDoDraw()
+        ctx.fillStyle = drawTodo[selectId].boxColor
         ctx.fillRect(mouseX,mouseY,500,75);
         ctx.fillStyle = textColor
         ctx.fillText(selectText,mouseX,mouseY+50)
-        toDoDraw()
         saveDrawToDo();
     }
     if(draw&&!downRead){
@@ -410,6 +411,42 @@ function out(e){
     }
 }
 
+function drawingCheck(e){
+    const mouseX = e.offsetX
+    const mouseY = e.offsetY
+    for(let i=0;i<=drawId-1;i++){
+        if(mouseX<drawTodo[i].x+500&&mouseX>drawTodo[i].x){
+            if(mouseY<drawTodo[i].y+75&&mouseY>drawTodo[i].y){
+                if(!drawTodo[i].check){
+                    drawTodo[i].boxColor = checkColor;
+                    console.log("체크");
+                    drawTodo[i].check = true;
+                    toDoAllDraw()
+                    saveDrawToDo();
+                }else{
+                    drawTodo[i].boxColor = boxColor;
+                    console.log("해제");
+                    drawTodo[i].check = false;
+                    toDoAllDraw()
+                    saveDrawToDo();
+                }
+            }
+        }
+    }
+}
+
+function drawingBack(){
+    drawingId--;
+    drawingDraw();
+    toDoAllDraw()
+}
+
+function drawingFront(){
+    drawingId++;
+    drawingDraw();
+    toDoAllDraw()
+}
+
 function init(){
     loadToDo();
     form.addEventListener("submit",submit);
@@ -417,6 +454,7 @@ function init(){
     canvas.addEventListener("mousemove",move);
     window.addEventListener("mouseup",up);
     canvas.addEventListener("mouseout",out)
+    canvas.addEventListener("dblclick",drawingCheck);
 }
 
 init();
