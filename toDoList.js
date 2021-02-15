@@ -457,11 +457,29 @@ function drawingBack(){
     }
 }
 
-function drawingFront(){
-    drawingId++;
-    CZDrawingDraw();
-    toDoAllDraw()
+//function drawingFront(){//
+//    drawingId++;
+//    CZDrawingDraw();
+//    toDoAllDraw()
+//}
+
+let formHidden = true;
+
+function keyDown(e){
+    const key = e.key;
+    if(key === "Control"){
+        console.log(e)
+        if(formHidden){
+            form.classList.remove("hidden");
+            formHidden = false
+        }else{
+            form.classList.add("hidden");
+            formHidden = true
+        }
+
+    }
 }
+
 
 function init(){
     loadToDo();
@@ -472,6 +490,7 @@ function init(){
     canvas.addEventListener("mouseout",out)
     canvas.addEventListener("dblclick",drawingCheck);
     back.addEventListener("click",drawingBack);
+    window.addEventListener("keydown",keyDown)
 }
 
 init();
