@@ -216,7 +216,8 @@ function submit(event){
         const time = clock();
         paintToDo(text,false,time);
         loadDraw(text)
-
+        form.classList.add("hidden");
+        formHidden = true
         input.value = "";
     }else{
         input.value = "";
@@ -468,15 +469,7 @@ let formHidden = true;
 function keyDown(e){
     const key = e.key;
     if(key === "Control"){
-        console.log(e)
-        if(formHidden){
-            form.classList.remove("hidden");
-            formHidden = false
-        }else{
-            form.classList.add("hidden");
-            formHidden = true
-        }
-
+        form.classList.toggle("hidden")
     }
 }
 
