@@ -245,7 +245,7 @@ let selectId;
 
 let boxColor = "#F0CD5F";
 let textColor = "black";
-let checkColor = "#ffc3df";
+let checkColor = "#ffe3e3";
 
 const drawing = [];
 let drawingId = 0;
