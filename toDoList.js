@@ -257,6 +257,13 @@ let curX;
 let curY;
 
 let i = 0;
+
+download_img = function(el) {
+    // get image URI from canvas object
+    var imageURI = canvas.toDataURL("image/jpg");
+    el.href = imageURI;
+  };
+
 function loadDraw(text){
     ctx.fillStyle = boxColor
     ctx.fillRect(x,y,500,75);
